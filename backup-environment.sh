@@ -6,12 +6,11 @@ if [ "$EUID" -eq 0 ]
   exit
 fi
 
-# Copy into this folder if file exists, tmux config, vim config, bashrc, gitconfig, gitignore. Do it with a loop.
-for file in .tmux.conf .vimrc .bashrc .gitconfig .gitignore
-do
-    if [ -f $file ]; then
-        echo "Setting $file"
-        cp $file ~/
+# Copy into this folder if file exists in the home folder, tmux config, vim config, bashrc, gitconfig, gitignore. Do it with a loop.
+echo "Copying files from home folder"
+for file in .tmux.conf .vimrc .bashrc .gitconfig .gitignore; do
+    if [ -f ~/$file ]; then
+        cp ~/$file .
     fi
 done
 
