@@ -1,11 +1,24 @@
 #!/usr/bin/bash
 
-echo "Updating tmux config"
+# This script can't be run as root or sudo
+if [ "$EUID" -eq 0 ]
+  then echo "Please don't run this script as root or sudo"
+  exit
+fi
 
-cp ~/.tmux.conf .
+# Copy into this folder if file exists, tmux config, vim config, bashrc, gitconfig, gitignore. Do it with a loop.
+for file in .tmux.conf .vimrc .bashrc .gitconfig .gitignore
+do
+    if [ -f $file ]; then
+        echo "Setting $file"
+        cp $file ~/
+    fi
+done
 
-echo "Pushing to github..."
+# Commit and push to github
+echo "Committing and pushing to github"
 git add .
-git commit -m "Updating environment config"
+git commit -m "Backup environment"
 git push
+
 echo "Done"
