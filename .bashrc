@@ -91,7 +91,6 @@ fi
 alias ll='ls -alF'
 alias la='ls -A'
 alias l='ls -CF'
-alias ta='tmux attach'
 
 # Add an "alert" alias for long running commands.  Use like so:
 #   sleep 10; alert
@@ -116,10 +115,12 @@ if ! shopt -oq posix; then
     . /etc/bash_completion
   fi
 fi
-alias sail='[ -f sail ] && bash sail || bash vendor/bin/sail'
+alias sail='bash vendor/bin/sail'
 
-export NVM_DIR="$HOME/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
-[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+# Auto load SSH Agent
+if [  -z "$SSH_AUTH_SOCK" ]; then
+  eval `ssh-agent`
+fi
+ssh-add -l > /dev/null || ssh-add
 
-[ -z "$TMUX" ] && export TERM=xterm-256color
+alias myip="dig +short myip.opendns.com @resolver1.opendns.com"

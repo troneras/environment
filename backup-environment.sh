@@ -6,13 +6,26 @@ if [ "$EUID" -eq 0 ]
   exit
 fi
 
-# Copy into this folder if file exists in the home folder, tmux config, vim config, bashrc, gitconfig, gitignore. Do it with a loop.
+# Copy into this folder if file exists in the home folder, tmux config, vim config, bashrc. Do it with a loop.
 echo "Copying files from home folder"
-for file in .tmux.conf .vimrc .bashrc .gitconfig .gitignore; do
+for file in .tmux.conf .vimrc .bashrc; do
     if [ -f ~/$file ]; then
         cp ~/$file .
     fi
 done
+
+
+# Copy into this folder the ssh folder and encrypt it with aes-256-cbc
+echo "Copying ssh folder and encrypting it"
+if [ -d ~/.ssh ]; then
+    cp -r ~/.ssh ./ssh
+    tar -czf ssh.tar.gz ssh
+    openssl enc -aes-256-cbc -salt -in ssh.tar.gz -out ssh.tar.gz.enc
+    rm -rf ssh
+    rm ssh.tar.gz
+fi
+
+
 
 # Commit and push to github
 echo "Committing and pushing to github"
